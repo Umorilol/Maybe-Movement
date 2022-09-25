@@ -6,6 +6,7 @@
 #include <iostream>
 #include "Player.h"
 
+//yes
 int main()
 {
 	sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Maybe Movement" );

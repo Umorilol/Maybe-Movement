@@ -29,7 +29,6 @@ public:
 	sf::Vector2i mousePos;
 	//Grapple Hook and Grapple Line
 	sf::RectangleShape gLine;
-	sf::RectangleShape gHook;
 	float hookX{ 10 };
 	float hookY{ 5 };
 	bool hookActive{ false };
@@ -42,5 +41,6 @@ public:
 	void Collision( Player &player );
 	float grappleRotation( sf::Vector2f mPos, sf::Vector2f pPos );
 	float grappleLength( sf::Vector2f mPos, sf::Vector2f pPos );
+	sf::Vector2f grappleSlope(sf::Vector2f mPos, sf::Vector2f pPos);
 };
 

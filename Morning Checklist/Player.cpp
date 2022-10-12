@@ -48,7 +48,8 @@ GrappleHook::GrappleHook(Player &player)
 	gLine.setPosition( sf::Vector2f( player.pBox.getPosition().x,player.pBox.getPosition().y));
 
 }
-	
+
+// Need to change the grappling hook so that it detects of a point or seperate entity at the end of grapple not the mouse pos
 void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape box)
 {
 	//Grappling Hook
@@ -65,6 +66,7 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 			std::cout << grapLength << std::endl;
 			gLine.setSize( sf::Vector2f( 2, grapLength ) );
 			hookActive = true;
+			player.gravity = 0.f;
 		}
 	}
 	
@@ -74,7 +76,7 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 		sf::Vector2f gSlope = grappleSlope( sf::Vector2f( mousePos ), player.pBox.getPosition() );
 		std::cout << gSlope.x << " " << gSlope.y << std::endl;
 		player.pBox.move( gSlope.x, gSlope.y );
-		
+
 		hookHit = true;
 	}
 	//Retract grapple
@@ -116,7 +118,22 @@ float GrappleHook::grappleRotation( sf::Vector2f mPos, sf::Vector2f pPos )
 	return angle;
 }
 
+/*Get the slope of the line between mouse positionand player positionand return x value as slope and y value as always 1 or negative 1
+* based on position relative to mouse position */
 sf::Vector2f GrappleHook::grappleSlope( sf::Vector2f mPos, sf::Vector2f pPos ) 
 {
-	return sf::Vector2f(( mPos.x - pPos.x ) , ( mPos.y - pPos.y ));
+	float xSlope = abs(( pPos.x - mPos.x ) / ( pPos.y - mPos.y ));
+	float ySlope = 0;
+
+	if ( mPos.y > pPos.y )
+		 ySlope = 1;
+	else
+		ySlope = -1;
+
+	if ( mPos.x > pPos.x )
+		xSlope = xSlope;
+	else
+		xSlope = -xSlope;
+
+	return sf::Vector2f( xSlope, ySlope );
 }

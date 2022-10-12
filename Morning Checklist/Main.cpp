@@ -44,7 +44,6 @@ int main()
 		//Collision - Need to fix/ flesh out
 		// the hook is falling off of the player when jumping 
 		player.Collision( floor );
-		hook.Collision( player );
 
 		window.clear();
 

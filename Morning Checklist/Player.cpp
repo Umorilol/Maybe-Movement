@@ -45,13 +45,14 @@ GrappleHook::GrappleHook(Player &player)
 	//Initialize Grappling Line
 	gLine.setFillColor( sf::Color::Green);
 	gLine.setSize( sf::Vector2f( hookX, hookY ) );
-	gLine.setPosition( sf::Vector2f( player.pBox.getPosition().x,player.pBox.getPosition().y));
 
 }
 
 // Need to change the grappling hook so that it detects of a point or seperate entity at the end of grapple not the mouse pos
 void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape box)
 {
+	//Make sure the grappling hook moves with player
+	gLine.setPosition( sf::Vector2f( player.pBox.getPosition().x, player.pBox.getPosition().y ) );
 	//Grappling Hook
 	if ( sf::Mouse::isButtonPressed( sf::Mouse::Left) )
 	{
@@ -97,11 +98,7 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 
 void GrappleHook::Collision(Player &player)
 {
-	//keep GrappleLine onto player
-	if ( gLine.getPosition().y != player.pBox.getPosition().y )
-		gLine.setPosition( player.pBox.getPosition().x, player.pBox.getPosition().y );
-	if ( gLine.getPosition().x != player.pBox.getPosition().x )
-		gLine.setPosition( player.pBox.getPosition().x, player.pBox.getPosition().y );
+	//This can be to check if grapple hits a wall 
 
 }
 

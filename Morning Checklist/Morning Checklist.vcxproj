@@ -24,6 +24,7 @@
     <ProjectGuid>{8d58b16e-67d1-4b79-af18-dc7903b976fe}</ProjectGuid>
     <RootNamespace>Morning_Checklist</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>MaybeMovement</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

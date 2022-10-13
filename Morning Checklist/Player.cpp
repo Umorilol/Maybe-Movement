@@ -46,6 +46,9 @@ GrappleHook::GrappleHook(Player &player)
 	gLine.setFillColor( sf::Color::Green);
 	gLine.setSize( sf::Vector2f( hookX, hookY ) );
 
+	//Initialize grapple hook
+	gHook.setFillColor( sf::Color::Yellow );
+	gHook.setSize( sf::Vector2f(10.f, 10.f ));
 }
 
 // Need to change the grappling hook so that it detects of a point or seperate entity at the end of grapple not the mouse pos
@@ -53,6 +56,12 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 {
 	//Make sure the grappling hook moves with player
 	gLine.setPosition( sf::Vector2f( player.pBox.getPosition().x, player.pBox.getPosition().y ) );
+
+	//Get hook offset and add it to the line position
+	sf::Vector2f hookPos( hookOffset( rotation, grapLength ) );
+	std::cout << hookPos.x << " " << hookPos.y << std::endl;
+	gHook.setPosition(gLine.getPosition().x - hookPos.x, gLine.getPosition().y + hookPos.y);
+
 	//Grappling Hook
 	if ( sf::Mouse::isButtonPressed( sf::Mouse::Left) )
 	{
@@ -113,6 +122,13 @@ float GrappleHook::grappleRotation( sf::Vector2f mPos, sf::Vector2f pPos )
 	float angle = atan2( mPos.y - pPos.y, mPos.x - pPos.x ) * 180 / pi;
 
 	return angle;
+}
+
+//This function will get the x and y position to give the hook the correct position
+sf::Vector2f GrappleHook::hookOffset(float grapRotat, float grapLength)
+{
+	sf::Vector2f offset ((cos(abs(grapRotat)) * grapLength), (sin(abs(grapRotat)) * grapLength) );
+	return offset;
 }
 
 /*Get the slope of the line between mouse positionand player positionand return x value as slope and y value as always 1 or negative 1

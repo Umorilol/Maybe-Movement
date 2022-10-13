@@ -52,6 +52,7 @@ int main()
 		window.draw( player.pBox );
 		window.draw( box );
 		window.draw( hook.gLine );
+		window.draw( hook.gHook );
 
 		window.display();
 	}

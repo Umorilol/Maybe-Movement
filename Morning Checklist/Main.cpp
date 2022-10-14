@@ -41,8 +41,7 @@ int main()
 		player.Update();
 		hook.Update(player, &window, box);
 
-		//Collision - Need to fix/ flesh out
-		// the hook is falling off of the player when jumping 
+		//Collision - Need to expand for the player (walls, grappleBoxes)
 		player.Collision( floor );
 
 		window.clear();

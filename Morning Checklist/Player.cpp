@@ -60,7 +60,7 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 	//Get hook offset and add it to the line position
 	sf::Vector2f hookPos( hookOffset( rotation, grapLength ) );
 	std::cout << hookPos.x << " " << hookPos.y << std::endl;
-	gHook.setPosition(gLine.getPosition().x - hookPos.x, gLine.getPosition().y + hookPos.y);
+	gHook.setPosition( gLine.getPosition().x + hookPos.x, gLine.getPosition().y + hookPos.y );
 
 	//Grappling Hook
 	if ( sf::Mouse::isButtonPressed( sf::Mouse::Left) )
@@ -118,8 +118,7 @@ float GrappleHook::grappleLength( sf::Vector2f mPos, sf::Vector2f pPos )
 
 float GrappleHook::grappleRotation( sf::Vector2f mPos, sf::Vector2f pPos )
 {
-	double pi = 3.14159265;
-	float angle = atan2( mPos.y - pPos.y, mPos.x - pPos.x ) * 180 / pi;
+	float angle = atan2( mPos.y - pPos.y, mPos.x - pPos.x ) * (180 / M_PI);
 
 	return angle;
 }
@@ -127,7 +126,8 @@ float GrappleHook::grappleRotation( sf::Vector2f mPos, sf::Vector2f pPos )
 //This function will get the x and y position to give the hook the correct position
 sf::Vector2f GrappleHook::hookOffset(float grapRotat, float grapLength)
 {
-	sf::Vector2f offset ((cos(abs(grapRotat)) * grapLength), (sin(abs(grapRotat)) * grapLength) );
+	float radGrapRotat = grapRotat * ( M_PI / 180 );
+	sf::Vector2f offset ((cos(radGrapRotat) * grapLength), (sin( radGrapRotat ) * grapLength) );
 	return offset;
 }
 

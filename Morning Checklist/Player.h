@@ -38,6 +38,7 @@ public:
 	bool hookHit { false };
 	float rotation {0};
 	float grapLength { 1 };
+	float grapMoving{ 0 };
 
 	GrappleHook( Player &player );
 	void Update( Player &player, sf::Window *window, sf::RectangleShape box );

@@ -9,12 +9,12 @@ Player::Player()
 void Player::Update()
 {
 	//Player movement
-	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )  //Right
 	{
 		pBox.move( vel, 0.f );
 	}
 
-	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )  //Left
 	{
 		pBox.move( -vel, 0.f );
 	}
@@ -51,15 +51,16 @@ GrappleHook::GrappleHook(Player &player)
 	gHook.setSize( sf::Vector2f(10.f, 10.f ));
 }
 
-// Need to change the grappling hook so that it detects of a point or seperate entity at the end of grapple not the mouse pos
+/* - Need to change the grappling hook so that it detects of a point or seperate entity at the end of grapple not the mouse pos
+*  - Need to change the line length to shrink as the player moves towards it 
+*/
 void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape box)
 {
 	//Make sure the grappling hook moves with player
 	gLine.setPosition( sf::Vector2f( player.pBox.getPosition().x, player.pBox.getPosition().y ) );
 
-	//Get hook offset and add it to the line position
+	//Get hook offset and add it to the line position for hook
 	sf::Vector2f hookPos( hookOffset( rotation, grapLength ) );
-	std::cout << hookPos.x << " " << hookPos.y << std::endl;
 	gHook.setPosition( gLine.getPosition().x + hookPos.x, gLine.getPosition().y + hookPos.y );
 
 	//Grappling Hook
@@ -70,40 +71,49 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 		{
 			//grappleHook.setOrigin( Vector2f( mousePos ) );
 			rotation = grappleRotation( sf::Vector2f( mousePos ), player.pBox.getPosition() );
-			std::cout << rotation << std::endl;
 			gLine.rotate( rotation + 270 );
 			grapLength = grappleLength( sf::Vector2f( mousePos ), player.pBox.getPosition() );
 			std::cout << grapLength << std::endl;
-			gLine.setSize( sf::Vector2f( 2, grapLength ) );
+			std::cout << gLine.getSize().y << std::endl;
+			//gLine.setSize( sf::Vector2f( 2, grapLength ));
 			hookActive = true;
-			player.gravity = 0.f;
 		}
+	}
+
+	if ( grapLength >= gLine.getSize().y)
+	{
+		gLine.setSize( sf::Vector2f( 2, grapMoving ) );
+		grapMoving += 5;
 	}
 	
 	//Check if hook hits
-	if ( box.getGlobalBounds().contains( sf::Vector2f( mousePos ) ) )
+	if ( box.getGlobalBounds().intersects( gHook.getGlobalBounds() ) ) 
 	{
+		hookHit = true;
 		sf::Vector2f gSlope = grappleSlope( sf::Vector2f( mousePos ), player.pBox.getPosition() );
 		std::cout << gSlope.x << " " << gSlope.y << std::endl;
 		player.pBox.move( gSlope.x, gSlope.y );
 
-		hookHit = true;
+		player.gravity = 0.f;
 	}
+
 	//Retract grapple
-	else
+	if ( grapLength >= 5 && grapLength <= gLine.getSize().y )
 	{
-		if ( grapLength >= 1 && hookHit == false )
+		grapLength -= 5;
+		gLine.setSize( sf::Vector2f( 2, grapLength ) );
+		if ( grapLength <= 1 )
 		{
-			grapLength -= 5;
-			gLine.setSize( sf::Vector2f( 2, grapLength ) );
-			if ( grapLength <= 1 )
-			{
-				gLine.setRotation( 0 );
-				hookActive = false;
-			}
+			gLine.setRotation( 0 );
+			grapLength = 2;
+			gLine.setSize( sf::Vector2f( 2, 3 ) );
+			grapMoving = 0;
+			hookActive = false;
 		}
 	}
 }
+		
+
 
 void GrappleHook::Collision(Player &player)
 {

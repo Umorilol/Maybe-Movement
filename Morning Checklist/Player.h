@@ -36,6 +36,7 @@ public:
 	float hookY{ 5 };
 	bool hookActive{ false };
 	bool hookHit { false };
+	bool hookRetracting{ false };
 	float rotation {0};
 	float grapLength { 1 };
 	float grapMoving{ 0 };

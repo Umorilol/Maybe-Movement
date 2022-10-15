@@ -56,6 +56,8 @@ GrappleHook::GrappleHook(Player &player)
 */
 void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape box)
 {
+	std::cout << grapMoving << std::endl;
+	std::cout << grapLength << std::endl;
 	//Make sure the grappling hook moves with player
 	gLine.setPosition( sf::Vector2f( player.pBox.getPosition().x, player.pBox.getPosition().y ) );
 
@@ -73,44 +75,47 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 			rotation = grappleRotation( sf::Vector2f( mousePos ), player.pBox.getPosition() );
 			gLine.rotate( rotation + 270 );
 			grapLength = grappleLength( sf::Vector2f( mousePos ), player.pBox.getPosition() );
-			std::cout << grapLength << std::endl;
 			std::cout << gLine.getSize().y << std::endl;
 			//gLine.setSize( sf::Vector2f( 2, grapLength ));
 			hookActive = true;
 		}
 	}
 
-	if ( grapLength >= gLine.getSize().y)
-	{
-		gLine.setSize( sf::Vector2f( 2, grapMoving ) );
-		grapMoving += 5;
-	}
-	
 	//Check if hook hits
-	if ( box.getGlobalBounds().intersects( gHook.getGlobalBounds() ) ) 
+	if ( box.getGlobalBounds().contains( sf::Vector2f(mousePos) ) ) 
 	{
 		hookHit = true;
 		sf::Vector2f gSlope = grappleSlope( sf::Vector2f( mousePos ), player.pBox.getPosition() );
 		std::cout << gSlope.x << " " << gSlope.y << std::endl;
 		player.pBox.move( gSlope.x, gSlope.y );
 
-		player.gravity = 0.f;
+		player.gravity = 0;
 	}
-
+	
 	//Retract grapple
-	if ( grapLength >= 5 && grapLength <= gLine.getSize().y )
+	if ( grapLength >= 3 && grapLength <= gLine.getSize().y )
 	{
+		hookRetracting = true;
 		grapLength -= 5;
 		gLine.setSize( sf::Vector2f( 2, grapLength ) );
-		if ( grapLength <= 1 )
+		if ( grapLength < 3 )
 		{
 			gLine.setRotation( 0 );
-			grapLength = 2;
-			gLine.setSize( sf::Vector2f( 2, 3 ) );
+			grapLength = 3;
+			gLine.setSize( sf::Vector2f( 2, 0 ) );
 			grapMoving = 0;
 			hookActive = false;
+			hookRetracting = false;
 		}
 	}
+
+	//Move grapple outwards
+	if ( grapLength >= gLine.getSize().y && hookRetracting == false && hookActive == true)
+	{
+		grapMoving += 3;
+		gLine.setSize( sf::Vector2f( 2, grapMoving ) );
+	}
+
 }
 		
 

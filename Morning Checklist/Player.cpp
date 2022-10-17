@@ -119,7 +119,6 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 }
 		
 
-
 void GrappleHook::Collision(Player &player)
 {
 	//This can be to check if grapple hits a wall 

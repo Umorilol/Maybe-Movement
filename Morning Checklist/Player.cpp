@@ -56,8 +56,6 @@ GrappleHook::GrappleHook(Player &player)
 */
 void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape box)
 {
-	std::cout << grapMoving << std::endl;
-	std::cout << grapLength << std::endl;
 	//Make sure the grappling hook moves with player
 	gLine.setPosition( sf::Vector2f( player.pBox.getPosition().x, player.pBox.getPosition().y ) );
 

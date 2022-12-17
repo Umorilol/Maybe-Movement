@@ -16,9 +16,9 @@ int main()
 	GrappleHook hook(player);
 
 	//GrappleBox
-	sf::RectangleShape box;
-	box.setSize( sf::Vector2f( 15.f, 15.f ) );
-	box.setPosition( sf::Vector2f( 200, 300 ) );
+	sf::RectangleShape skyBox;
+	skyBox.setSize( sf::Vector2f( 15.f, 15.f ) );
+	skyBox.setPosition( sf::Vector2f( 200, 300 ) );
 
 	//Floor
 	sf::RectangleShape floor;
@@ -39,7 +39,7 @@ int main()
 
 		//Update entities
 		player.Update();
-		hook.Update(player, &window, box);
+		hook.Update(player, &window, skyBox);
 
 		//Collision - Need to fix/ flesh out
 		// the hook is falling off of the player when jumping 
@@ -50,8 +50,9 @@ int main()
 		//Draw
 		window.draw( floor );
 		window.draw( player.pBox );
-		window.draw( box );
-		window.draw( hook.gLine );
+		window.draw( skyBox );
+		window.draw( hook.grappleLine );
+		window.draw( hook.gHook );
 
 		window.display();
 	}

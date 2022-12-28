@@ -1,9 +1,4 @@
 //This will be my first attempt at a movement game
-#include <SFML/Graphics.hpp>
-#include <SFML/Window.hpp>
-#include <SFML/System.hpp>
-#include <vector>
-#include <iostream>
 #include "Player.h"
 
 int main()
@@ -39,20 +34,17 @@ int main()
 
 		//Update entities
 		player.Update();
+		player.Collision( floor );
 		hook.Update(player, &window, skyBox);
 
-		//Collision - Need to fix/ flesh out
-		// the hook is falling off of the player when jumping 
-		player.Collision( floor );
-
+		//Draw
 		window.clear();
 
-		//Draw
 		window.draw( floor );
-		window.draw( player.pBox );
+		window.draw( player.playerBox );
 		window.draw( skyBox );
 		window.draw( hook.grappleLine );
-		window.draw( hook.gHook );
+		window.draw( hook.grappleHook );
 
 		window.display();
 	}

@@ -13,7 +13,7 @@ void Player::Update()
 	{
 		pBox.move( vel, 0.f );
 	}
-
+		
 	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
 	{
 		pBox.move( -vel, 0.f );
@@ -29,7 +29,7 @@ void Player::Update()
 		jumpTimer = 0;
 
 	//"Gravity"
-	pBox.move( 0, gravity );
+	pBox.move( 0,gravity );
 }
 
 void Player::Collision(sf::RectangleShape floor)
@@ -67,31 +67,34 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 			std::cout << grapLength << std::endl;
 			gLine.setSize( sf::Vector2f( 2, grapLength ) );
 			hookActive = true;
-			player.gravity = 0.f;
+			
 		}
 	}
 	
 	//Check if hook hits
-	if ( box.getGlobalBounds().contains( sf::Vector2f( mousePos ) ) )
+	if ( box.getGlobalBounds().contains( sf::Vector2f( mousePos ) ) && hookActive == true)
 	{
 		sf::Vector2f gSlope = grappleSlope( sf::Vector2f( mousePos ), player.pBox.getPosition() );
 		std::cout << gSlope.x << " " << gSlope.y << std::endl;
+		grapLength = grappleLength( sf::Vector2f( mousePos ), player.pBox.getPosition() );
+		gLine.setSize( sf::Vector2f( 2, grapLength ) );
 		player.pBox.move( gSlope.x, gSlope.y );
-
+		player.gravity = 0.f;
 		hookHit = true;
+		if(sf::Keyboard::isKeyPressed(sf::Keyboard::S) )
+		{
+			hookHit = false;
+			hookActive = false;
+			player.gravity = 5;
+	
+		}
 	}
 	//Retract grapple
 	else
 	{
 		if ( grapLength >= 1 && hookHit == false )
 		{
-			grapLength -= 5;
-			gLine.setSize( sf::Vector2f( 2, grapLength ) );
-			if ( grapLength <= 1 )
-			{
-				gLine.setRotation( 0 );
-				hookActive = false;
-			}
+			retractGrapple();
 		}
 	}
 }
@@ -133,4 +136,16 @@ sf::Vector2f GrappleHook::grappleSlope( sf::Vector2f mPos, sf::Vector2f pPos )
 		xSlope = -xSlope;
 
 	return sf::Vector2f( xSlope, ySlope );
+}
+
+
+void GrappleHook::retractGrapple()
+{
+	grapLength -= 5;
+	gLine.setSize( sf::Vector2f( 2, grapLength ) );
+	if ( grapLength <= 1 )
+	{
+		gLine.setRotation( 0 );
+		hookActive = false;
+	}
 }

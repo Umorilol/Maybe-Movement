@@ -11,10 +11,10 @@ public:
 	sf::RectangleShape pBox;
 	float x { 40.f };
 	float y { 500.f };
-	int vel { 5 };
-	int gravity { 5 };
-	int jumpVel { -10 };
-	int jumpTimer { 0 };
+	float vel { 5 };
+	float gravity { 5 };
+	float jumpVel { -10 };
+	float jumpTimer { 0 };
 	sf::Vector2f playerPos {x, y};
 
 	Player();
@@ -42,5 +42,6 @@ public:
 	float grappleRotation( sf::Vector2f mPos, sf::Vector2f pPos );
 	float grappleLength( sf::Vector2f mPos, sf::Vector2f pPos );
 	sf::Vector2f grappleSlope(sf::Vector2f mPos, sf::Vector2f pPos);
+	void retractGrapple();
 };
 

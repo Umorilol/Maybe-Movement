@@ -10,7 +10,7 @@ int main()
 {
 	sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Maybe Movement" );
 	window.setFramerateLimit( 60 );
-
+	
 	//Initialize
 	Player player;
 	GrappleHook hook(player);
@@ -38,12 +38,12 @@ int main()
 		}
 
 		//Update entities
-		player.Update();
+		player.update();
 		hook.Update(player, &window, box);
 
 		//Collision - Need to fix/ flesh out
 		// the hook is falling off of the player when jumping 
-		player.Collision( floor );
+		player.collision( floor );
 
 		window.clear();
 
@@ -51,7 +51,7 @@ int main()
 		window.draw( floor );
 		window.draw( player.pBox );
 		window.draw( box );
-		window.draw( hook.gLine );
+		window.draw( hook.g_line );
 
 		window.display();
 	}

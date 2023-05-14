@@ -3,28 +3,27 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <vector>
-#include <iostream>
 #include "Player.h"
-
+#include "shape.h"
 int main()
 {
 	sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Maybe Movement" );
 	window.setFramerateLimit( 60 );
-	
+
 	//Initialize
 	Player player;
 	GrappleHook hook(player);
 
+	//Vector for collidable objects
+	std::vector<shape> colidable;
+	
 	//GrappleBox
-	sf::RectangleShape box;
-	box.setSize( sf::Vector2f( 15.f, 15.f ) );
-	box.setPosition( sf::Vector2f( 200, 300 ) );
+	shape box( sf::Vector2f( 15.f, 15.f ), sf::Vector2f(200.f, 350.f), sf::Color::Blue);
+	colidable.push_back( box );
 
 	//Floor
-	sf::RectangleShape floor;
-	floor.setFillColor( sf::Color::Blue );
-	floor.setPosition( 0, 530 );
-	floor.setSize( sf::Vector2f( 800, 100 ) );
+	shape floor(sf::Vector2f(800, 100), sf::Vector2f(0, 530), sf::Color::Blue);
+	colidable.push_back( floor );
 
 	while ( window.isOpen() )
 	{
@@ -39,11 +38,17 @@ int main()
 
 		//Update entities
 		player.update();
-		hook.Update(player, &window, box);
+		for(auto& i : colidable)
+			hook.Update(player, &window, i);
 
-		//Collision - Need to fix/ flesh out
-		// the hook is falling off of the player when jumping 
-		player.collision( floor );
+		/*Collision - Attempted to push colidable objects into a vector, current logic only works for a single object (the floor)
+		 *Current iteration will detect collision using AABB method and will only cancel gravity so player does not sink through
+		 *floor */
+		for (auto& i : colidable)
+		{
+			player.collision(&i);
+		}
+		//player.collision( floor );
 
 		window.clear();
 

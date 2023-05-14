@@ -4,38 +4,48 @@ Player::Player()
 {
 	pBox.setSize( sf::Vector2f( 30.f, 30.f ) );
 	pBox.setPosition( player_pos );
+	colliding = false;
 }
 
 void Player::update()
 {
-	//Player movement
-	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
-	{
-		pBox.move( vel, 0.f );
-	}
-		
-	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
-	{
-		pBox.move( -vel, 0.f );
-	}
-	
-	//Jump
-	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) && jump_timer <= 15 )
-	{
-		pBox.move( 0, jump_velocity );
-		jump_timer += 1;
-	}
-	if ( pBox.getPosition().y >= 500 )
-		jump_timer = 0;
+	if ( colliding == false ) {
+		//Player movement
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+		{
+			pBox.move( vel, 0.f );
+		}
 
-	//"Gravity"
-	pBox.move( 0,gravity );
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+		{
+			pBox.move( -vel, 0.f );
+		}
+
+		//Jump
+		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) && jump_timer <= 15 )
+		{
+			pBox.move( 0, jump_velocity );
+			jump_timer += 1;
+		}
+		if ( pBox.getPosition().y >= 500 )
+			jump_timer = 0;
+
+		//"Gravity"
+		pBox.move( 0, gravity );
+	}
+	else
+		std::cout << "Colliding";
 }
 
-void Player::collision(sf::RectangleShape floor)
+void Player::collision(shape* object)
 {
-	if ( pBox.getPosition().y >= floor.getPosition().y - pBox.getSize().y )
-		pBox.setPosition( pBox.getPosition().x, floor.getPosition().y - pBox.getSize().y );
+	//if ( pBox.getPosition().y >= object.getPosition().y - pBox.getSize().y )
+		//pBox.setPosition( pBox.getPosition().x -1 , (pBox.getPosition().y - pBox.getSize().y) - 1);
+
+	if ( object->collision( pBox, object->object_ ) )
+		colliding = true;
+	else
+		colliding = false;
 }
 
 //--------------------------------------------------------------------------------------------------------------------------------------
@@ -49,7 +59,7 @@ GrappleHook::GrappleHook(Player &player)
 }
 
 // Need to change the grappling hook so that it detects of a point or seperate entity at the end of grapple not the mouse pos
-void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape box)
+void GrappleHook::Update(Player &player, sf::Window *window, shape box)
 {
 	//Make sure the grappling hook moves with player
 	g_line.setPosition( sf::Vector2f( player.pBox.getPosition().x, player.pBox.getPosition().y ) );
@@ -72,7 +82,7 @@ void GrappleHook::Update(Player &player, sf::Window *window, sf::RectangleShape 
 	}
 	
 	//Check if hook hits
-	if ( box.getGlobalBounds().contains( sf::Vector2f( mouse_pos ) ) && hook_active == true)
+	if ( box.object_.getGlobalBounds().contains( sf::Vector2f( mouse_pos ) ) && hook_active == true)
 	{
 		sf::Vector2f gSlope = grappleSlope( sf::Vector2f( mouse_pos ), player.pBox.getPosition() );
 		std::cout << gSlope.x << " " << gSlope.y << std::endl;

@@ -4,7 +4,7 @@
 #include <SFML/System.hpp>
 #include <vector>
 #include <iostream>
-
+#include "shape.h"
 class Player
 {
 public:
@@ -15,12 +15,13 @@ public:
 	float gravity { 5 };
 	float jump_velocity { -10 };
 	float jump_timer { 0 };
+	bool colliding;
 	sf::Vector2f player_pos {x, y};
 
 	Player();
 
 	void update();
-	void collision(sf::RectangleShape floor);
+	void collision(shape* object);
 };
 
 class GrappleHook
@@ -37,7 +38,7 @@ public:
 	float grap_length { 1 };
 
 	GrappleHook( Player &player );
-	void Update( Player &player, sf::Window *window, sf::RectangleShape box );
+	void Update( Player &player, sf::Window *window, shape box );
 	void Collision( Player &player );
 	float GrappleRotation( sf::Vector2f m_pos, sf::Vector2f p_pos );
 	float grappleLength( sf::Vector2f m_pos, sf::Vector2f p_pos );

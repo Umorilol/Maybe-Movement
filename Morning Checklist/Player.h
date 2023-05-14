@@ -7,7 +7,6 @@
 
 class Player
 {
-
 public:
 	sf::RectangleShape pBox;
 	float x { 40.f };

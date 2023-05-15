@@ -5,6 +5,7 @@
 #include <vector>
 #include "Player.h"
 #include "shape.h"
+
 int main()
 {
 	sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Maybe Movement" );
@@ -35,7 +36,7 @@ int main()
 				window.close();
 			}
 		}
-
+		
 		//Update entities
 		player.update();
 		for(auto& i : colidable)

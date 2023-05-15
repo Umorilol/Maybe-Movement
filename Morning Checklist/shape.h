@@ -19,6 +19,11 @@ public:
 	sf::Vector2f get_position() const;
 	sf::Vector2f get_size() const;
 
-	sf::RectangleShape object_;
+};
 
+class floor : shape
+{
+	floor();
+
+	bool floor_collision( sf::RectangleShape, sf::RectangleShape);
 };

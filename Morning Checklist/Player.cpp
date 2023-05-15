@@ -9,32 +9,28 @@ Player::Player()
 
 void Player::update()
 {
-	if ( colliding == false ) {
-		//Player movement
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
-		{
-			pBox.move( vel, 0.f );
-		}
-
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
-		{
-			pBox.move( -vel, 0.f );
-		}
-
-		//Jump
-		if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) && jump_timer <= 15 )
-		{
-			pBox.move( 0, jump_velocity );
-			jump_timer += 1;
-		}
-		if ( pBox.getPosition().y >= 500 )
-			jump_timer = 0;
-
-		//"Gravity"
-		pBox.move( 0, gravity );
+	//Player movement
+	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
+	{
+		pBox.move( vel, 0.f );
 	}
-	else
-		std::cout << "Colliding";
+
+	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::A ) )
+	{
+		pBox.move( -vel, 0.f );
+	}
+
+	//Jump
+	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::Space ) && jump_timer <= 15 )
+	{
+		pBox.move( 0, jump_velocity );
+		jump_timer += 1;
+	}
+	if ( pBox.getPosition().y >= 500 )
+		jump_timer = 0;
+
+	//"Gravity"
+	pBox.move( 0, gravity );
 }
 
 void Player::collision(shape* object)
@@ -42,6 +38,8 @@ void Player::collision(shape* object)
 	//if ( pBox.getPosition().y >= object.getPosition().y - pBox.getSize().y )
 		//pBox.setPosition( pBox.getPosition().x -1 , (pBox.getPosition().y - pBox.getSize().y) - 1);
 
+	if ( object->floor_collision( pBox, object->object_ ) )
+		colliding = true;
 	if ( object->collision( pBox, object->object_ ) )
 		colliding = true;
 	else

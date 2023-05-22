@@ -4,24 +4,27 @@
 #include <SFML/System.hpp>
 #include <vector>
 #include <iostream>
-#include "shape.h"
+#include "tile.h"
+
 class Player
 {
 public:
 	sf::RectangleShape pBox;
 	float x { 40.f };
 	float y { 500.f };
-	float vel { 5 };
-	float gravity { 5 };
+	float movement_speed { 100 };
+	//Temporarily set gravity to 0 while collision is being fixed
+	float gravity_value { 500 };
 	float jump_velocity { -10 };
 	float jump_timer { 0 };
 	bool colliding;
+	bool gravity_on{ true };
 	sf::Vector2f player_pos {x, y};
 
 	Player();
 
-	void update();
-	void collision(shape* object);
+	void update(float );
+	void collision(tile& object);
 };
 
 class GrappleHook
@@ -38,7 +41,7 @@ public:
 	float grap_length { 1 };
 
 	GrappleHook( Player &player );
-	void Update( Player &player, sf::Window *window, shape box );
+	void Update( Player &player, sf::Window *window, tile box );
 	void Collision( Player &player );
 	float GrappleRotation( sf::Vector2f m_pos, sf::Vector2f p_pos );
 	float grappleLength( sf::Vector2f m_pos, sf::Vector2f p_pos );

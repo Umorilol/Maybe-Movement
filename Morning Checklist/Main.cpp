@@ -3,28 +3,48 @@
 #include <SFML/Window.hpp>
 #include <SFML/System.hpp>
 #include <vector>
+#include <iostream>
+// Local headers
 #include "Player.h"
-#include "shape.h"
+#include "tile.h"
+#include "ground.h"
 
 int main()
 {
 	sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Maybe Movement" );
-	window.setFramerateLimit( 60 );
+	//window.setFramerateLimit( 60 );	// commenting out to implement framerate independent movement	
+	sf::Clock clock;
+	sf::Time delta_time;
+		// code for calculating framerate
+	sf::Time fps_update_time;
+	unsigned int frame_count = 0;
+		//text
+	sf::Text fps_text;
+	sf::Font font;
+	if ( !font.loadFromFile( "fonts/Dosis-Light.ttf" ) ) // Replace with the path to your font file
+	{
+		// Font loading error handling
+		return EXIT_FAILURE;
+	}
+	fps_text.setFont( font );
+	fps_text.setCharacterSize( 30 );
+	fps_text.setFillColor( sf::Color::Red );
+	fps_text.setPosition( 50.f, 50.f );
 
 	//Initialize
 	Player player;
 	GrappleHook hook(player);
 
 	//Vector for collidable objects
-	std::vector<shape> colidable;
+	std::vector<tile> colidable;
 	
 	//GrappleBox
-	shape box( sf::Vector2f( 15.f, 15.f ), sf::Vector2f(200.f, 350.f), sf::Color::Blue);
-	colidable.push_back( box );
+	tile box( sf::Vector2f( 15.f, 15.f ), sf::Vector2f(200.f, 350.f), sf::Color::Blue);
+	colidable.emplace_back( box );
 
 	//Floor
-	shape floor(sf::Vector2f(800, 100), sf::Vector2f(0, 530), sf::Color::Blue);
-	colidable.push_back( floor );
+	ground floor( sf::Vector2f( 800.f, 100.f ), sf::Vector2f( 0.f, 550.f ), sf::Color::Blue, true );
+	colidable.emplace_back( floor );
 
 	while ( window.isOpen() )
 	{
@@ -36,9 +56,8 @@ int main()
 				window.close();
 			}
 		}
-		
 		//Update entities
-		player.update();
+		player.update(delta_time.asSeconds());
 		for(auto& i : colidable)
 			hook.Update(player, &window, i);
 
@@ -47,16 +66,32 @@ int main()
 		 *floor */
 		for (auto& i : colidable)
 		{
-			player.collision(&i);
+			player.collision(i);
 		}
 		//player.collision( floor );
 
+		// framerate
+		delta_time = clock.restart();
+		frame_count++;
+		fps_update_time += delta_time;
+
+		if ( fps_update_time >= sf::seconds( 1.0f ) )
+		{
+			float fps = frame_count / fps_update_time.asSeconds();
+			fps_text.setString( "FPS: " + std::to_string( static_cast<int>( fps ) ) );
+
+			frame_count = 0;
+			fps_update_time -= sf::seconds( 1.0f );
+		}
 		window.clear();
 
-		//Draw
-		window.draw( floor );
+		//Draw 
+		window.draw( fps_text );
+		// colidable vector
+		for ( auto& i : colidable )
+			i.draw( window );
+		// player
 		window.draw( player.pBox );
-		window.draw( box );
 		window.draw( hook.g_line );
 
 		window.display();

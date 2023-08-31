@@ -12,7 +12,7 @@
 int main()
 {
 	sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Maybe Movement" );
-	//window.setFramerateLimit( 60 );	// commenting out to implement framerate independent movement	
+	window.setFramerateLimit( 60 );	// commenting out to implement framerate independent movement	
 	sf::Clock clock;
 	sf::Time delta_time;
 		// code for calculating framerate

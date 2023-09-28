@@ -2,16 +2,20 @@
 
 Player::Player()
 {
-	pBox.setSize( sf::Vector2f( 30.f, 30.f ) );
+	pBox.setSize( player_size );
 	pBox.setPosition( player_pos );
-	colliding = false;
 }
 
+/*
+ * tested changing movement_amount = movement_speed * delta_time -> movement_speed + delta_time * 1
+ * result: drastically increased speed
+ */
 void Player::update(float delta_time)
 {
 	float movement_amount = movement_speed * delta_time;
 	float gravity_amount = gravity_value * delta_time;
 	float jump_amount = jump_velocity * delta_time;
+
 	//Player movement
 	if ( sf::Keyboard::isKeyPressed( sf::Keyboard::D ) )
 	{
@@ -55,7 +59,7 @@ void Player::collision(tile& object)
 	}
 	else {
 		gravity_on = true;
-		gravity_value = 5.f;
+		gravity_value = 50.f;
 	}
 }
 

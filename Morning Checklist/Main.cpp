@@ -4,7 +4,7 @@
 #include <SFML/System.hpp>
 #include <vector>
 #include <iostream>
-// Local headers
+// local headers
 #include "Player.h"
 #include "tile.h"
 #include "ground.h"
@@ -12,18 +12,18 @@
 int main()
 {
 	sf::RenderWindow window( sf::VideoMode( 800, 600 ), "Maybe Movement" );
-	window.setFramerateLimit( 60 );	// commenting out to implement framerate independent movement	
+	//window.setFramerateLimit( 60 );	// commenting out to implement framerate independent movement	
 	sf::Clock clock;
 	sf::Time delta_time;
 		// code for calculating framerate
 	sf::Time fps_update_time;
 	unsigned int frame_count = 0;
-		//text
+		// text
 	sf::Text fps_text;
 	sf::Font font;
 	if ( !font.loadFromFile( "fonts/Dosis-Light.ttf" ) ) // Replace with the path to your font file
 	{
-		// Font loading error handling
+		// font loading error handling
 		return EXIT_FAILURE;
 	}
 	fps_text.setFont( font );
@@ -56,6 +56,20 @@ int main()
 				window.close();
 			}
 		}
+		// framerate
+		delta_time = clock.restart();
+		frame_count++;
+		fps_update_time += delta_time;
+
+		if ( fps_update_time >= sf::seconds( 1.0f ) )
+		{
+			float fps = frame_count / fps_update_time.asSeconds();
+			fps_text.setString( "FPS: " + std::to_string( static_cast<int>( fps ) ) );
+
+			frame_count = 0;
+			fps_update_time -= sf::seconds( 1.0f );
+		}
+
 		//Update entities
 		player.update(delta_time.asSeconds());
 		for(auto& i : colidable)
@@ -70,19 +84,6 @@ int main()
 		}
 		//player.collision( floor );
 
-		// framerate
-		delta_time = clock.restart();
-		frame_count++;
-		fps_update_time += delta_time;
-
-		if ( fps_update_time >= sf::seconds( 1.0f ) )
-		{
-			float fps = frame_count / fps_update_time.asSeconds();
-			fps_text.setString( "FPS: " + std::to_string( static_cast<int>( fps ) ) );
-
-			frame_count = 0;
-			fps_update_time -= sf::seconds( 1.0f );
-		}
 		window.clear();
 
 		//Draw 

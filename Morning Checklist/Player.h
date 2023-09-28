@@ -11,15 +11,15 @@ class Player
 public:
 	sf::RectangleShape pBox;
 	float x { 40.f };
-	float y { 500.f };
+	float y { 349.f };
 	float movement_speed { 100 };
-	//Temporarily set gravity to 0 while collision is being fixed
-	float gravity_value { 500 };
+	float gravity_value { 50 };
 	float jump_velocity { -10 };
 	float jump_timer { 0 };
-	bool colliding;
+	bool colliding {false};
 	bool gravity_on{ true };
 	sf::Vector2f player_pos {x, y};
+	sf::Vector2f player_size{ 30.f, 30.f };
 
 	Player();
 

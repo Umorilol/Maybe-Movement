@@ -13,8 +13,8 @@ public:
 	float x { 40.f };
 	float y { 349.f };
 	float movement_speed { 100 };
-	float gravity_value { 50 };
-	float jump_velocity { -10 };
+	float gravity_value { 70 };
+	float jump_velocity { -80 };
 	float jump_timer { 0 };
 	bool colliding {false};
 	bool gravity_on{ true };
@@ -30,7 +30,7 @@ public:
 class GrappleHook
 {
 public:
-	sf::Vector2i mouse_pos;
+	sf::Vector2f mouse_pos;
 	//Grapple Hook and Grapple Line
 	sf::RectangleShape g_line;
 	float hook_x{ 10 };
@@ -41,7 +41,7 @@ public:
 	float grap_length { 1 };
 
 	GrappleHook( Player &player );
-	void Update( Player &player, sf::Window *window, tile box );
+	void Update( Player &player, sf::Vector2f mouse_position, tile box );
 	void Collision( Player &player );
 	float GrappleRotation( sf::Vector2f m_pos, sf::Vector2f p_pos );
 	float grappleLength( sf::Vector2f m_pos, sf::Vector2f p_pos );

@@ -59,7 +59,6 @@ void Player::collision(tile& object)
 	}
 	else {
 		gravity_on = true;
-		gravity_value = 50.f;
 	}
 }
 
@@ -73,14 +72,14 @@ GrappleHook::GrappleHook(Player &player)
 }
 
 // Need to change the grappling hook so that it detects of a point or seperate entity at the end of grapple not the mouse pos
-void GrappleHook::Update(Player &player, sf::Window *window, tile box)
+void GrappleHook::Update(Player &player, sf::Vector2f mouse_position, tile box)
 {
 	//Make sure the grappling hook moves with player
 	g_line.setPosition( sf::Vector2f( player.pBox.getPosition().x, player.pBox.getPosition().y ) );
 	//Grappling Hook
 	if ( sf::Mouse::isButtonPressed( sf::Mouse::Left) )
 	{
-		mouse_pos = sf::Mouse::getPosition( *window );
+		mouse_pos = sf::Vector2f(mouse_position);
 		if ( hook_active == false )
 		{
 			//grappleHook.setOrigin( Vector2f( mousePos ) );
@@ -161,7 +160,6 @@ sf::Vector2f GrappleHook::grappleSlope( sf::Vector2f m_pos, sf::Vector2f p_pos )
 
 	return sf::Vector2f( xSlope, ySlope );
 }
-
 
 void GrappleHook::RetractGrapple()
 {

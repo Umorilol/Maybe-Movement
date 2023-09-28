@@ -73,7 +73,7 @@ int main()
 		//Update entities
 		player.update(delta_time.asSeconds());
 		for(auto& i : colidable)
-			hook.Update(player, &window, i);
+			hook.Update(player, sf::Vector2f(sf::Mouse::getPosition(window)), i);
 
 		/*Collision - Attempted to push colidable objects into a vector, current logic only works for a single object (the floor)
 		 *Current iteration will detect collision using AABB method and will only cancel gravity so player does not sink through

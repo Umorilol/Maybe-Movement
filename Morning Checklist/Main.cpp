@@ -92,7 +92,7 @@ int main()
 		for ( auto& i : colidable )
 			i.draw( window );
 		// player
-		window.draw( player.pBox );
+		window.draw( player.p_box_ );
 		window.draw( hook.g_line );
 
 		window.display();

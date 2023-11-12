@@ -4,10 +4,10 @@
 #include <SFML/System.hpp>
 #include <vector>
 #include <iostream>
-// local headers
 #include "Player.h"
 #include "tile.h"
 #include "ground.h"
+#include "UI.h"
 
 int main()
 {
@@ -15,62 +15,37 @@ int main()
 	//window.setFramerateLimit( 60 );	// commenting out to implement framerate independent movement	
 	sf::Clock clock;
 	sf::Time delta_time;
-		// code for calculating framerate
-	sf::Time fps_update_time;
-	unsigned int frame_count = 0;
-		// text
-	sf::Text fps_text;
-	sf::Font font;
-	if ( !font.loadFromFile( "fonts/Dosis-Light.ttf" ) ) // Replace with the path to your font file
-	{
-		// font loading error handling
-		return EXIT_FAILURE;
-	}
-	fps_text.setFont( font );
-	fps_text.setCharacterSize( 30 );
-	fps_text.setFillColor( sf::Color::Red );
-	fps_text.setPosition( 50.f, 50.f );
 
-	//Initialize
+	// Initialize
+    UI ui;
+    ui.initialize();
+
 	Player player;
 	GrappleHook hook(player);
 
-	//Vector for collidable objects
+	// Vector for collidable objects
 	std::vector<tile> colidable;
 	
-	//GrappleBox
+	// GrappleBox
 	tile box( sf::Vector2f( 15.f, 15.f ), sf::Vector2f(200.f, 350.f), sf::Color::Blue);
 	colidable.emplace_back( box );
 
-	//Floor
+	// Floor
 	ground floor( sf::Vector2f( 800.f, 100.f ), sf::Vector2f( 0.f, 550.f ), sf::Color::Blue, true );
 	colidable.emplace_back( floor );
 
-	while ( window.isOpen() )
-	{
+	while ( window.isOpen() ) {
 		sf::Event event;
-		while ( window.pollEvent( event ) )
-		{
-			if ( event.type == sf::Event::Closed )
-			{
+		while ( window.pollEvent( event ) ) {
+			if ( event.type == sf::Event::Closed ) {
 				window.close();
 			}
 		}
-		// framerate
 		delta_time = clock.restart();
-		frame_count++;
-		fps_update_time += delta_time;
 
-		if ( fps_update_time >= sf::seconds( 1.0f ) )
-		{
-			float fps = frame_count / fps_update_time.asSeconds();
-			fps_text.setString( "FPS: " + std::to_string( static_cast<int>( fps ) ) );
+		// Update entities
+        ui.update(delta_time);
 
-			frame_count = 0;
-			fps_update_time -= sf::seconds( 1.0f );
-		}
-
-		//Update entities
 		player.update(delta_time.asSeconds());
 		for(auto& i : colidable)
 			hook.Update(player, sf::Vector2f(sf::Mouse::getPosition(window)), i);
@@ -78,8 +53,7 @@ int main()
 		/*Collision - Attempted to push colidable objects into a vector, current logic only works for a single object (the floor)
 		 *Current iteration will detect collision using AABB method and will only cancel gravity so player does not sink through
 		 *floor */
-		for (auto& i : colidable)
-		{
+		for (auto& i : colidable) {
 			player.collision(i);
 		}
 		//player.collision( floor );
@@ -87,11 +61,11 @@ int main()
 		window.clear();
 
 		//Draw 
-		window.draw( fps_text );
-		// colidable vector
+		window.draw( ui.fps_text );
+
 		for ( auto& i : colidable )
 			i.draw( window );
-		// player
+	
 		window.draw( player.p_box_ );
 		window.draw( hook.g_line );
 

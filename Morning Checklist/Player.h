@@ -5,16 +5,16 @@
 #include <vector>
 #include <iostream>
 #include "tile.h"
-
-class Player
-{
+/* Need to merge instead of two seperate classes have grapplehook be apart of Player, polymorphism? */
+class Player {
 public:
 	sf::RectangleShape p_box_;
 	float x{40.f};
 	float y{349.f};
-	float movement_speed{100};
-	float gravity_value{70};
-	float jump_velocity{-80};
+    float multiplier{40.f};
+	float movement_speed{10};
+	float gravity_value{10};
+	float jump_velocity{-15};
 	float jump_timer{0};
 	bool colliding{false};
 	bool gravity_on{true};
@@ -27,8 +27,7 @@ public:
 	void collision(tile& object);
 };
 
-class GrappleHook
-{
+class GrappleHook {
 public:
 	sf::Vector2f mouse_pos;
 	//Grapple Hook and Grapple Line
@@ -40,7 +39,8 @@ public:
 	float rotation{0};
 	float grap_length{1};
 
-	GrappleHook(Player& player);
+    GrappleHook() = default;
+    GrappleHook(Player& player);
 	void Update(Player& player, sf::Vector2f mouse_position, tile box);
     static void Collision(Player& player);
 	float GrappleRotation(sf::Vector2f m_pos, sf::Vector2f p_pos);

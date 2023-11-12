@@ -10,7 +10,8 @@ Player::Player() {
  * result: drastically increased speed
  */
 
-void Player::update(float delta_time) {
+void Player::update(float dt) {
+    delta_time = dt;
 	float movement_amount = movement_speed * delta_time * multiplier;
 	float gravity_amount = gravity_value * delta_time * multiplier;
 	float jump_amount = jump_velocity * delta_time * multiplier;

@@ -52,7 +52,9 @@ int main()
 
 		/*Collision - Attempted to push colidable objects into a vector, current logic only works for a single object (the floor)
 		 *Current iteration will detect collision using AABB method and will only cancel gravity so player does not sink through
-		 *floor */
+		 *floor 
+		 * The answer is polymorphism need to create a virtual function in tile and use unique_ptr so that the overloaded methods don't get cut off
+		 */
 		for (auto& i : colidable) {
 			player.collision(i);
 		}

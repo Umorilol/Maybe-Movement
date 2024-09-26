@@ -11,6 +11,7 @@ ground::ground( sf::Vector2f size, sf::Vector2f position, sf::Color color, bool 
 	isFloor = floor;
 }
 
+
 int ground::collision( sf::RectangleShape pBox, sf::RectangleShape object, bool floor )
 {
 	if ( floor )

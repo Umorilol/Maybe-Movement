@@ -9,33 +9,63 @@ Player::Player() {
  * tested changing movement_amount = movement_speed * delta_time -> movement_speed + delta_time * 1
  * result: drastically increased speed
  */
+//
+//void Player::update(float dt) {
+//    delta_time = dt;
+//	
+//	//Player movement
+//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+//		player_pos = player_pos + velocity * delta_time;
+//	}
+//
+//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
+//		player_pos = player_pos + velocity * delta_time;
+//	}
+//
+//	//Jump
+//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && jump_timer <= 15) {
+//		p_box_.move(0, jump_amount);
+//		jump_timer += 1;
+//	}
+//	if (p_box_.getPosition().y >= 505)
+//		jump_timer = 0;
+//
+//	//"Gravity"
+//	if (gravity_on == true)
+//		p_box_.move(gravity);
+//
+//	p_box_.setPosition(player_pos);
+//}
 
 void Player::update(float dt) {
-    delta_time = dt;
-	float movement_amount = movement_speed * delta_time * multiplier;
-	float gravity_amount = gravity_value * delta_time * multiplier;
-	float jump_amount = jump_velocity * delta_time * multiplier;
-
-	//Player movement
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && velocity.y < .1) {
+		velocity.y = jump_velocity;
+	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-		p_box_.move(movement_amount, 0.f);
+		velocity.x = 10;
 	}
-
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-		p_box_.move(-movement_amount, 0.f);
+		velocity.x = -10;
 	}
 
-	//Jump
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && jump_timer <= 15) {
-		p_box_.move(0, jump_amount);
-		jump_timer += 1;
-	}
-	if (p_box_.getPosition().y >= 505)
-		jump_timer = 0;
+	player_pos = player_pos + (velocity * dt);
+	
+	if(player_pos.y >= 500)
+		velocity.y = 0;
 
-	//"Gravity"
-	if (gravity_on == true)
-		p_box_.move(0, gravity_amount);
+	velocity.y = velocity.y + (gravity * dt);
+
+	if(velocity.x < 0) {
+		velocity.x = velocity.x + (gravity * dt);
+	}
+
+    else if(velocity.x > 0)
+		velocity.x = velocity.x - (gravity * dt);
+    else
+		velocity.x = 0;
+
+	p_box_.setPosition(player_pos);
+	std::cout<<velocity.x << " " << velocity.y << "\n";
 }
 
 void Player::collision(tile& object) {
@@ -76,21 +106,21 @@ void GrappleHook::Update(Player& player, sf::Vector2f mouse_position, tile box) 
 		}
 	}
 
-	//Check if hook hits
-	if (box.object_.getGlobalBounds().contains(sf::Vector2f(mouse_pos)) && hook_active == true) {
-		sf::Vector2f gSlope = GrappleSlope(sf::Vector2f(mouse_pos), player.p_box_.getPosition());
-		std::cout << gSlope.x << " " << gSlope.y << std::endl;
-		grap_length = GrappleLength(sf::Vector2f(mouse_pos), player.p_box_.getPosition());
-		g_line.setSize(sf::Vector2f(2, grap_length));
-		player.p_box_.move(gSlope.x, gSlope.y);
-		player.gravity_value = 0.f;	// ABSOLUTELY NEED TO CHANGE
-		hook_hit = true;
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			hook_hit = false;
-			hook_active = false;
-			player.gravity_value = 5;
-		}
-	}
+	////Check if hook hits
+	//if (box.object_.getGlobalBounds().contains(sf::Vector2f(mouse_pos)) && hook_active == true) {
+	//	sf::Vector2f gSlope = GrappleSlope(sf::Vector2f(mouse_pos), player.p_box_.getPosition());
+	//	std::cout << gSlope.x << " " << gSlope.y << std::endl;
+	//	grap_length = GrappleLength(sf::Vector2f(mouse_pos), player.p_box_.getPosition());
+	//	g_line.setSize(sf::Vector2f(2, grap_length));
+	//	player.p_box_.move(gSlope.x, gSlope.y);
+	//	player.gravity_value = 0.f;	// ABSOLUTELY NEED TO CHANGE
+	//	hook_hit = true;
+	//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+	//		hook_hit = false;
+	//		hook_active = false;
+	//		player.gravity_value = 5;
+	//	}
+	//}
 	//Retract grapple
 	else {
 		if (grap_length >= 1 && hook_hit == false) {

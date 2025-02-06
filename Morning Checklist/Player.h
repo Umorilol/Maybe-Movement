@@ -11,14 +11,15 @@ class Player {
 public:
 	sf::RectangleShape p_box_;
 	float x{40.f};
-	float y{450.f};
+	float y{250.f};
     float multiplier{40.f};
-	sf::Vector2f velocity{0.f, 0.f};
-	float gravity{15.f};
-	float jump_velocity{-15.f};
+	sf::Vector2f velocity{50.f, 0.f};
+    float gravity = 15.f;
+    float friction = 15.f;
+	float jump_velocity = 15.f;
+    int player_speed = 40;
     float delta_time;
 	bool colliding{false};
-	bool gravity_on{true};
 	sf::Vector2f player_pos{x, y};
 	sf::Vector2f player_size{30.f, 30.f};
 
@@ -39,10 +40,11 @@ public:
 	bool hook_hit{false};
 	float rotation{0.f};
 	float grap_length{1.f};
-
+    float dt_ = 0;
+    
     GrappleHook() = default;
     GrappleHook(Player& player);
-	void Update(Player& player, sf::Vector2f mouse_position, tile box);
+	void Update(Player&, sf::Vector2f, tile, float);
     static void Collision(Player& player);
 	float GrappleRotation(sf::Vector2f m_pos, sf::Vector2f p_pos);
 	float GrappleLength(sf::Vector2f m_pos, sf::Vector2f p_pos);
